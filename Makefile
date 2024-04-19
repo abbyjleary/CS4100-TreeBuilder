@@ -1,5 +1,3 @@
-.PHONY: default clean
-
 default: treeBuilder
 
 treeBuilder: lex.yy.o tree_builder.tab.o
