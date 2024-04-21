@@ -11,7 +11,6 @@
 #define NUMBER 3
 #define VAR 4
 #define STRING 5
-#define OTHER 6
 #define IN 7
 #define NAME 8
 #define WEIGHT 9
@@ -37,7 +36,7 @@ weight {return WEIGHT;}
 
 isachildof {return ISACHILDOF;}
 
-\-?{D}* {return NUMBER;}
+{D}* {return NUMBER;}
 
 {LD}{LDU}* {return VAR;}
 
@@ -45,7 +44,7 @@ isachildof {return ISACHILDOF;}
 
 [ \t\n\f\r] { }
 
-. {return OTHER;}
+. {return yytext[0];}
 
 %%
 

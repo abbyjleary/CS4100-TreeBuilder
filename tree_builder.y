@@ -1,40 +1,62 @@
 %start start
-%token BUILDNODE, FOR, NUMBER, VAR, STRING, OTHER, IN, NAME, WEIGHT, ISACHILDOF
+%token BUILDNODE FOR NUMBER VAR STRING IN NAME WEIGHT ISACHILDOF
 
 %{
 
-#include <iostream>
-#include <vector>
 #include "parse_tree.h"
-using namespace std;
+#include <stdio.h>
 
 int yylex();
 void yyerror(const char *);
 
+struct nodeArgs {
+    char* name;
+    int weight;
+    char* isachildof;
+};
+
 %}
 
 %union {
-    int intValue;
-    char *stringValue;
+    int intPtr;
+    char *stringPtr;
 }
 
 // Token definitions
-%type <intValue> NUMBER
-%type <stringValue> STRING
+/* %type <statePtr> buildnodeStatement forStatement */
+// %type 
 
 %%
 
-start : ;
+start : statements {printf("statements");}
+    ;
+
+statements: statement {printf("buildnode root");}
+    | statement statements {printf("buildnode root");}
+    ; 
+
+statement: buildnodeStatement {printf("buildnode root");}
+    | forStatement {printf("buildnode root");}
+    ;
+
+buildnodeStatements: buildnodeStatement {printf("buildnode root");}
+    | buildnodeStatement buildnodeStatements {printf("buildnode root");}
+    ;
+
+buildnodeStatement: BUILDNODE '{' NAME '=' STRING ';' WEIGHT '=' NUMBER ';' ISACHILDOF '=' STRING ';' '}' ';' {printf("buildnode child");}
+    | BUILDNODE '{' NAME '=' STRING ';' WEIGHT '=' NUMBER ';' '}' ';' {printf("buildnode root");}
+    ;
+
+forStatement: FOR VAR IN '[' NUMBER ':' NUMBER ']' '{' buildnodeStatements '}' ';' {printf("for");};
 
 %%
 
 void yyerror(const char *msg) {
-    fprintf(stderr, "Error: %s\n", msg);
+    printf("Error: %s\n", msg);
 }
 
 int main() {
     // Code for testing the parser
     yyparse();
-    return 0;
 }
 
