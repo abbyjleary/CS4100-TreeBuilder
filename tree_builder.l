@@ -6,23 +6,9 @@
 * Abby Leary and Adeline Fitzwater
 */
 
-#define BUILDNODE 1
-#define FOR 2
-#define NUMBER 3
-#define VAR 4
-#define STRING 5
-#define IN 7
-#define NAME 8
-#define WEIGHT 9
-#define ISACHILDOF 10
-#define LBRACKET 11
-#define RBRACKET 12
-#define LBRACE 13
-#define RBRACE 14
-#define SEMICOLON 15
-#define EQUAL 16
-#define COLON 17
-#define PLUS 18
+#include <iostream>
+
+using namespace std;
 
 %}
 

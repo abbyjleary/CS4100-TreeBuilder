@@ -4,7 +4,10 @@
 %{
 
 #include "parse_tree.h"
-#include <stdio.h>
+// #include <stdio.h>
+#include <string>
+
+using namespace std;
 
 int yylex();
 void yyerror(const char *);
@@ -13,17 +16,33 @@ struct nodeArgs {
     char* name;
     int weight;
     char* isachildof;
+
+};
+
+struct var {
+    char* str;
+    int num;
 };
 
 %}
 
 %union {
-    int intPtr;
+    int number;
     char *stringPtr;
 }
 
+%{
+extern int yylex();
+extern void yyerror(char *String);  
+
+#include <iostream>
+ using namespace std;
+   
+%}
+
 // Token definitions
 /* %type <statePtr> buildnodeStatement forStatement */
+%type <number> number
 // %type 
 
 %%
@@ -59,13 +78,19 @@ string: STRING
     | VAR PLUS string
     ;
 
-number: NUMBER
-    | VAR
-    | NUMBER PLUS number
-    | VAR PLUS number
+number: NUMBER 
+        {
+            // number num = $1; 
+            // $$ = num;
+        }
+    | VAR 
+        {}
+    | NUMBER PLUS number 
+    | VAR PLUS number 
     ;
 
 %%
+#include "lex.yy.c"
 
 void yyerror(const char *msg) {
     printf("Error: %s\n", msg);
