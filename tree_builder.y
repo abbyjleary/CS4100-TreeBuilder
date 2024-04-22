@@ -1,5 +1,5 @@
 %start start
-%token BUILDNODE FOR NUMBER VAR STRING IN NAME WEIGHT ISACHILDOF
+%token BUILDNODE FOR NUMBER VAR STRING IN NAME WEIGHT ISACHILDOF LBRACE RBRACE LBRACKET RBRACKET SEMICOLON EQUAL COLON PLUS
 
 %{
 
@@ -31,23 +31,39 @@ struct nodeArgs {
 start : statements {printf("statements");}
     ;
 
-statements: statement {printf("buildnode root");}
+/* statements : {printf("jklfjdlkajklj");}
+    ; */
+
+statements: statement {printf("statements");}
     | statement statements {printf("buildnode root");}
     ; 
 
-statement: buildnodeStatement {printf("buildnode root");}
+/* statement: {printf("statement");} */
+ statement: buildnodeStatement {printf("buildnode root");}
     | forStatement {printf("buildnode root");}
     ;
 
 buildnodeStatements: buildnodeStatement {printf("buildnode root");}
     | buildnodeStatement buildnodeStatements {printf("buildnode root");}
+    ; 
+
+buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON ISACHILDOF EQUAL string SEMICOLON RBRACE SEMICOLON {printf("buildnode child");}
+    | BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON RBRACE SEMICOLON {printf("buildnode root");}
     ;
 
-buildnodeStatement: BUILDNODE '{' NAME '=' STRING ';' WEIGHT '=' NUMBER ';' ISACHILDOF '=' STRING ';' '}' ';' {printf("buildnode child");}
-    | BUILDNODE '{' NAME '=' STRING ';' WEIGHT '=' NUMBER ';' '}' ';' {printf("buildnode root");}
+forStatement: FOR VAR IN LBRACKET NUMBER COLON NUMBER RBRACKET LBRACE buildnodeStatements RBRACE SEMICOLON {printf("for");};
+
+string: STRING
+    | VAR
+    | STRING PLUS string
+    | VAR PLUS string
     ;
 
-forStatement: FOR VAR IN '[' NUMBER ':' NUMBER ']' '{' buildnodeStatements '}' ';' {printf("for");};
+number: NUMBER
+    | VAR
+    | NUMBER PLUS number
+    | VAR PLUS number
+    ;
 
 %%
 
