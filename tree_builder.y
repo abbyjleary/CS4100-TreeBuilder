@@ -35,12 +35,12 @@ start : statements {printf("statements");}
     ; */
 
 statements: statement {printf("statements");}
-    | statement statements {printf("buildnode root");}
+    | statement statements {printf("statement statements");}
     ; 
 
 /* statement: {printf("statement");} */
- statement: buildnodeStatement {printf("buildnode root");}
-    | forStatement {printf("buildnode root");}
+ statement: buildnodeStatement {printf("buildnode statement");}
+    | forStatement {printf("for statement");}
     ;
 
 buildnodeStatements: buildnodeStatement {printf("buildnode root");}

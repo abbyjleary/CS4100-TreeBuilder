@@ -90,10 +90,10 @@ int yywrap() {
 //                 printf("NUMBER\n");
 //                 break;
 //             case VAR:
-//                 printf("VAR\n");
+//                 printf("VAR: %s\n", yytext);
 //                 break;
 //             case STRING:
-//                 printf("STRING\n");
+//                 printf("STRING: %s\n", yytext);
 //                 break;
 //             case IN:
 //                 printf("IN\n");
