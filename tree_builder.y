@@ -4,7 +4,6 @@
 %{
 
 #include "parse_tree.h"
-// #include <stdio.h>
 #include <string>
 
 using namespace std;
@@ -17,11 +16,6 @@ struct nodeArgs {
     int weight;
     char* isachildof;
 
-};
-
-struct var {
-    char* str;
-    int num;
 };
 
 %}
@@ -42,12 +36,12 @@ extern void yyerror(char *String);
 
 // Token definitions
 /* %type <statePtr> buildnodeStatement forStatement */
-%type <number> number
-// %type 
+
+
 
 %%
 
-start : statements {printf("statements");}
+start : statements {cout << "statements" << endl;}
     ;
 
 /* statements : {printf("jklfjdlkajklj");}
@@ -72,7 +66,9 @@ buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL nu
 
 forStatement: FOR VAR IN LBRACKET NUMBER COLON NUMBER RBRACKET LBRACE buildnodeStatements RBRACE SEMICOLON {printf("for");};
 
-string: STRING
+/* something is wrong here, use the expressions in tree_node.h */
+
+/* string: STRING
     | VAR
     | STRING PLUS string
     | VAR PLUS string
@@ -80,14 +76,14 @@ string: STRING
 
 number: NUMBER 
         {
-            // number num = $1; 
-            // $$ = num;
+            $$ = $1;
         }
     | VAR 
-        {}
+        { 
+        }
     | NUMBER PLUS number 
     | VAR PLUS number 
-    ;
+    ; */
 
 %%
 #include "lex.yy.c"
