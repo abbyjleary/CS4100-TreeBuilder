@@ -1,5 +1,7 @@
 %start start
 %token BUILDNODE FOR NUMBER VAR STRING IN NAME WEIGHT ISACHILDOF
+%token '{' '}' '=' ';' '[' ']' ':' ',' '+'
+
 %{
 
 #include "tree_node.h"
@@ -18,8 +20,6 @@ void yyerror(const char *);
     intExpression *pInt;
     statement *pState;
     compoundStatement *pCState;
-    strVariable *pStrVar;
-    intVariable *pIntVar;
 }
 
 %{
@@ -52,7 +52,7 @@ start : prog
     }
     ;
 
-prog: statement prog {$$ = new compoundStatement($1, $2);}
+prog: statement prog {cout << "!!!!!";$$ = new compoundStatement($1, $2);}
     | {$$ = NULL;}
     ; 
 

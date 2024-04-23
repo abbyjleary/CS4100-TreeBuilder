@@ -18,31 +18,33 @@ LDU [a-zA-Z0-9_]
 
 %%
 
-buildnode {return BUILDNODE;}
+buildnode {yylval.str = strdup(yytext); return BUILDNODE;}
 
-for {return FOR;}
+for {yylval.str = strdup(yytext); return FOR;}
 
-in {return IN;}
+in {yylval.str = strdup(yytext); return IN;}
 
-name {return NAME;}
+name {yylval.str = strdup(yytext); return NAME;}
 
-weight {return WEIGHT;}
+weight {yylval.str = strdup(yytext); return WEIGHT;}
 
-isachildof {return ISACHILDOF;}
+isachildof {yylval.str = strdup(yytext); return ISACHILDOF;}
 
-{D}* {return NUMBER;}
+{D}* {yylval.str = strdup(yytext); return NUMBER;}
 
-{LD}{LDU}* {return VAR;}
+{LD}{LDU}* {yylval.str = strdup(yytext); return VAR;}
 
-\".*\" {return STRING;}
+\".*\" {yylval.str = strdup(yytext); return STRING;}
 
 [ \t\n\f\r] { }
-
-
 
 . { return yytext[0]; }
 
 %%
+
+int yywrap() {
+    return 1;
+}
 
 // int main() {
 //     int token;
