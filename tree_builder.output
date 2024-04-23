@@ -1,77 +1,72 @@
+Terminals which are not used
+
+   FOR
+   IN
+
+
+State 17 conflicts: 1 shift/reduce
+State 26 conflicts: 1 shift/reduce
+
+
 Grammar
 
     0 $accept: start $end
 
-    1 start: statements
+    1 start: prog
 
-    2 statements: statement
-    3           | statement statements
+    2 prog: statement prog
+    3     | /* empty */
 
     4 statement: buildnodeStatement
-    5          | forStatement
 
-    6 buildnodeStatements: buildnodeStatement
-    7                    | buildnodeStatement buildnodeStatements
+    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    6                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
 
-    8 buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON ISACHILDOF EQUAL string SEMICOLON RBRACE SEMICOLON
-    9                   | BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON RBRACE SEMICOLON
+    7 intExpression: NUMBER
+    8              | VAR
+    9              | intExpression '+' intExpression
 
-   10 forStatement: FOR VAR IN LBRACKET NUMBER COLON NUMBER RBRACKET LBRACE buildnodeStatements RBRACE SEMICOLON
-
-   11 string: STRING
-   12       | VAR
-   13       | STRING PLUS string
-   14       | VAR PLUS string
-
-   15 number: NUMBER
-   16       | VAR
-   17       | NUMBER PLUS number
-   18       | VAR PLUS number
+   10 stringExpression: STRING
+   11                 | VAR
+   12                 | stringExpression '+' stringExpression
 
 
 Terminals, with rules where they appear
 
 $end (0) 0
+'+' (43) 9 12
+';' (59) 5 6
+'=' (61) 5 6
+'{' (123) 5 6
+'}' (125) 5 6
 error (256)
-BUILDNODE (258) 8 9
-FOR (259) 10
-NUMBER (260) 10 15 17
-VAR (261) 10 12 14 16 18
-STRING (262) 11 13
-IN (263) 10
-NAME (264) 8 9
-WEIGHT (265) 8 9
-ISACHILDOF (266) 8
-LBRACE (267) 8 9 10
-RBRACE (268) 8 9 10
-LBRACKET (269) 10
-RBRACKET (270) 10
-SEMICOLON (271) 8 9 10
-EQUAL (272) 8 9
-COLON (273) 10
-PLUS (274) 13 14 17 18
+BUILDNODE (258) 5 6
+FOR (259)
+NUMBER (260) 7
+VAR (261) 8 11
+STRING (262) 10
+IN (263)
+NAME (264) 5 6
+WEIGHT (265) 5 6
+ISACHILDOF (266) 5
 
 
 Nonterminals, with rules where they appear
 
-$accept (20)
+$accept (17)
     on left: 0
-start (21)
+start (18)
     on left: 1, on right: 0
-statements (22)
-    on left: 2 3, on right: 1 3
-statement (23)
-    on left: 4 5, on right: 2 3
-buildnodeStatements (24)
-    on left: 6 7, on right: 7 10
-buildnodeStatement (25)
-    on left: 8 9, on right: 4 6 7
-forStatement (26)
-    on left: 10, on right: 5
-string (27)
-    on left: 11 12 13 14, on right: 8 9 13 14
-number (28)
-    on left: 15 16 17 18, on right: 8 9 17 18
+prog (19)
+    on left: 2 3, on right: 1 2
+statement (20)
+    on left: 4, on right: 2
+buildnodeStatement (21)
+    on left: 5 6, on right: 4
+intExpression (22)
+    on left: 7 8 9, on right: 5 6 9
+stringExpression (23)
+    on left: 10 11 12, on right: 5 6 12
 
 
 state 0
@@ -79,429 +74,280 @@ state 0
     0 $accept: . start $end
 
     BUILDNODE  shift, and go to state 1
-    FOR        shift, and go to state 2
 
-    start               go to state 3
-    statements          go to state 4
-    statement           go to state 5
-    buildnodeStatement  go to state 6
-    forStatement        go to state 7
+    $default  reduce using rule 3 (prog)
+
+    start               go to state 2
+    prog                go to state 3
+    statement           go to state 4
+    buildnodeStatement  go to state 5
 
 
 state 1
 
-    8 buildnodeStatement: BUILDNODE . LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON ISACHILDOF EQUAL string SEMICOLON RBRACE SEMICOLON
-    9                   | BUILDNODE . LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON RBRACE SEMICOLON
+    5 buildnodeStatement: BUILDNODE . '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    6                   | BUILDNODE . '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
 
-    LBRACE  shift, and go to state 8
+    '{'  shift, and go to state 6
 
 
 state 2
 
-   10 forStatement: FOR . VAR IN LBRACKET NUMBER COLON NUMBER RBRACKET LBRACE buildnodeStatements RBRACE SEMICOLON
+    0 $accept: start . $end
 
-    VAR  shift, and go to state 9
+    $end  shift, and go to state 7
 
 
 state 3
 
-    0 $accept: start . $end
-
-    $end  shift, and go to state 10
-
-
-state 4
-
-    1 start: statements .
+    1 start: prog .
 
     $default  reduce using rule 1 (start)
 
 
-state 5
+state 4
 
-    2 statements: statement .
-    3           | statement . statements
+    2 prog: statement . prog
 
     BUILDNODE  shift, and go to state 1
-    FOR        shift, and go to state 2
 
-    $default  reduce using rule 2 (statements)
+    $default  reduce using rule 3 (prog)
 
-    statements          go to state 11
-    statement           go to state 5
-    buildnodeStatement  go to state 6
-    forStatement        go to state 7
+    prog                go to state 8
+    statement           go to state 4
+    buildnodeStatement  go to state 5
 
 
-state 6
+state 5
 
     4 statement: buildnodeStatement .
 
     $default  reduce using rule 4 (statement)
 
 
+state 6
+
+    5 buildnodeStatement: BUILDNODE '{' . NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    6                   | BUILDNODE '{' . NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
+
+    NAME  shift, and go to state 9
+
+
 state 7
-
-    5 statement: forStatement .
-
-    $default  reduce using rule 5 (statement)
-
-
-state 8
-
-    8 buildnodeStatement: BUILDNODE LBRACE . NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON ISACHILDOF EQUAL string SEMICOLON RBRACE SEMICOLON
-    9                   | BUILDNODE LBRACE . NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON RBRACE SEMICOLON
-
-    NAME  shift, and go to state 12
-
-
-state 9
-
-   10 forStatement: FOR VAR . IN LBRACKET NUMBER COLON NUMBER RBRACKET LBRACE buildnodeStatements RBRACE SEMICOLON
-
-    IN  shift, and go to state 13
-
-
-state 10
 
     0 $accept: start $end .
 
     $default  accept
 
 
+state 8
+
+    2 prog: statement prog .
+
+    $default  reduce using rule 2 (prog)
+
+
+state 9
+
+    5 buildnodeStatement: BUILDNODE '{' NAME . '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    6                   | BUILDNODE '{' NAME . '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
+
+    '='  shift, and go to state 10
+
+
+state 10
+
+    5 buildnodeStatement: BUILDNODE '{' NAME '=' . stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    6                   | BUILDNODE '{' NAME '=' . stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
+
+    VAR     shift, and go to state 11
+    STRING  shift, and go to state 12
+
+    stringExpression  go to state 13
+
+
 state 11
 
-    3 statements: statement statements .
+   11 stringExpression: VAR .
 
-    $default  reduce using rule 3 (statements)
+    $default  reduce using rule 11 (stringExpression)
 
 
 state 12
 
-    8 buildnodeStatement: BUILDNODE LBRACE NAME . EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON ISACHILDOF EQUAL string SEMICOLON RBRACE SEMICOLON
-    9                   | BUILDNODE LBRACE NAME . EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON RBRACE SEMICOLON
+   10 stringExpression: STRING .
 
-    EQUAL  shift, and go to state 14
+    $default  reduce using rule 10 (stringExpression)
 
 
 state 13
 
-   10 forStatement: FOR VAR IN . LBRACKET NUMBER COLON NUMBER RBRACKET LBRACE buildnodeStatements RBRACE SEMICOLON
+    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression . ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    6                   | BUILDNODE '{' NAME '=' stringExpression . ';' WEIGHT '=' intExpression ';' '}' ';'
+   12 stringExpression: stringExpression . '+' stringExpression
 
-    LBRACKET  shift, and go to state 15
+    ';'  shift, and go to state 14
+    '+'  shift, and go to state 15
 
 
 state 14
 
-    8 buildnodeStatement: BUILDNODE LBRACE NAME EQUAL . string SEMICOLON WEIGHT EQUAL number SEMICOLON ISACHILDOF EQUAL string SEMICOLON RBRACE SEMICOLON
-    9                   | BUILDNODE LBRACE NAME EQUAL . string SEMICOLON WEIGHT EQUAL number SEMICOLON RBRACE SEMICOLON
+    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' . WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    6                   | BUILDNODE '{' NAME '=' stringExpression ';' . WEIGHT '=' intExpression ';' '}' ';'
 
-    VAR     shift, and go to state 16
-    STRING  shift, and go to state 17
-
-    string  go to state 18
+    WEIGHT  shift, and go to state 16
 
 
 state 15
 
-   10 forStatement: FOR VAR IN LBRACKET . NUMBER COLON NUMBER RBRACKET LBRACE buildnodeStatements RBRACE SEMICOLON
+   12 stringExpression: stringExpression '+' . stringExpression
 
-    NUMBER  shift, and go to state 19
+    VAR     shift, and go to state 11
+    STRING  shift, and go to state 12
+
+    stringExpression  go to state 17
 
 
 state 16
 
-   12 string: VAR .
-   14       | VAR . PLUS string
+    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT . '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    6                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT . '=' intExpression ';' '}' ';'
 
-    PLUS  shift, and go to state 20
-
-    $default  reduce using rule 12 (string)
+    '='  shift, and go to state 18
 
 
 state 17
 
-   11 string: STRING .
-   13       | STRING . PLUS string
+   12 stringExpression: stringExpression . '+' stringExpression
+   12                 | stringExpression '+' stringExpression .
 
-    PLUS  shift, and go to state 21
+    '+'  shift, and go to state 15
 
-    $default  reduce using rule 11 (string)
+    '+'       [reduce using rule 12 (stringExpression)]
+    $default  reduce using rule 12 (stringExpression)
 
 
 state 18
 
-    8 buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string . SEMICOLON WEIGHT EQUAL number SEMICOLON ISACHILDOF EQUAL string SEMICOLON RBRACE SEMICOLON
-    9                   | BUILDNODE LBRACE NAME EQUAL string . SEMICOLON WEIGHT EQUAL number SEMICOLON RBRACE SEMICOLON
+    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' . intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    6                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' . intExpression ';' '}' ';'
 
-    SEMICOLON  shift, and go to state 22
+    NUMBER  shift, and go to state 19
+    VAR     shift, and go to state 20
+
+    intExpression  go to state 21
 
 
 state 19
 
-   10 forStatement: FOR VAR IN LBRACKET NUMBER . COLON NUMBER RBRACKET LBRACE buildnodeStatements RBRACE SEMICOLON
+    7 intExpression: NUMBER .
 
-    COLON  shift, and go to state 23
+    $default  reduce using rule 7 (intExpression)
 
 
 state 20
 
-   14 string: VAR PLUS . string
+    8 intExpression: VAR .
 
-    VAR     shift, and go to state 16
-    STRING  shift, and go to state 17
-
-    string  go to state 24
+    $default  reduce using rule 8 (intExpression)
 
 
 state 21
 
-   13 string: STRING PLUS . string
+    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression . ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    6                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression . ';' '}' ';'
+    9 intExpression: intExpression . '+' intExpression
 
-    VAR     shift, and go to state 16
-    STRING  shift, and go to state 17
-
-    string  go to state 25
+    ';'  shift, and go to state 22
+    '+'  shift, and go to state 23
 
 
 state 22
 
-    8 buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON . WEIGHT EQUAL number SEMICOLON ISACHILDOF EQUAL string SEMICOLON RBRACE SEMICOLON
-    9                   | BUILDNODE LBRACE NAME EQUAL string SEMICOLON . WEIGHT EQUAL number SEMICOLON RBRACE SEMICOLON
+    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' . ISACHILDOF '=' stringExpression ';' '}' ';'
+    6                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' . '}' ';'
 
-    WEIGHT  shift, and go to state 26
+    ISACHILDOF  shift, and go to state 24
+    '}'         shift, and go to state 25
 
 
 state 23
 
-   10 forStatement: FOR VAR IN LBRACKET NUMBER COLON . NUMBER RBRACKET LBRACE buildnodeStatements RBRACE SEMICOLON
+    9 intExpression: intExpression '+' . intExpression
 
-    NUMBER  shift, and go to state 27
+    NUMBER  shift, and go to state 19
+    VAR     shift, and go to state 20
+
+    intExpression  go to state 26
 
 
 state 24
 
-   14 string: VAR PLUS string .
+    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF . '=' stringExpression ';' '}' ';'
 
-    $default  reduce using rule 14 (string)
+    '='  shift, and go to state 27
 
 
 state 25
 
-   13 string: STRING PLUS string .
+    6 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' . ';'
 
-    $default  reduce using rule 13 (string)
+    ';'  shift, and go to state 28
 
 
 state 26
 
-    8 buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT . EQUAL number SEMICOLON ISACHILDOF EQUAL string SEMICOLON RBRACE SEMICOLON
-    9                   | BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT . EQUAL number SEMICOLON RBRACE SEMICOLON
+    9 intExpression: intExpression . '+' intExpression
+    9              | intExpression '+' intExpression .
 
-    EQUAL  shift, and go to state 28
+    '+'  shift, and go to state 23
+
+    '+'       [reduce using rule 9 (intExpression)]
+    $default  reduce using rule 9 (intExpression)
 
 
 state 27
 
-   10 forStatement: FOR VAR IN LBRACKET NUMBER COLON NUMBER . RBRACKET LBRACE buildnodeStatements RBRACE SEMICOLON
+    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' . stringExpression ';' '}' ';'
 
-    RBRACKET  shift, and go to state 29
+    VAR     shift, and go to state 11
+    STRING  shift, and go to state 12
+
+    stringExpression  go to state 29
 
 
 state 28
 
-    8 buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL . number SEMICOLON ISACHILDOF EQUAL string SEMICOLON RBRACE SEMICOLON
-    9                   | BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL . number SEMICOLON RBRACE SEMICOLON
+    6 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';' .
 
-    NUMBER  shift, and go to state 30
-    VAR     shift, and go to state 31
-
-    number  go to state 32
+    $default  reduce using rule 6 (buildnodeStatement)
 
 
 state 29
 
-   10 forStatement: FOR VAR IN LBRACKET NUMBER COLON NUMBER RBRACKET . LBRACE buildnodeStatements RBRACE SEMICOLON
+    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression . ';' '}' ';'
+   12 stringExpression: stringExpression . '+' stringExpression
 
-    LBRACE  shift, and go to state 33
+    ';'  shift, and go to state 30
+    '+'  shift, and go to state 15
 
 
 state 30
 
-   15 number: NUMBER .
-   17       | NUMBER . PLUS number
+    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' . '}' ';'
 
-    PLUS  shift, and go to state 34
-
-    $default  reduce using rule 15 (number)
+    '}'  shift, and go to state 31
 
 
 state 31
 
-   16 number: VAR .
-   18       | VAR . PLUS number
+    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' . ';'
 
-    PLUS  shift, and go to state 35
-
-    $default  reduce using rule 16 (number)
+    ';'  shift, and go to state 32
 
 
 state 32
 
-    8 buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number . SEMICOLON ISACHILDOF EQUAL string SEMICOLON RBRACE SEMICOLON
-    9                   | BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number . SEMICOLON RBRACE SEMICOLON
+    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';' .
 
-    SEMICOLON  shift, and go to state 36
-
-
-state 33
-
-   10 forStatement: FOR VAR IN LBRACKET NUMBER COLON NUMBER RBRACKET LBRACE . buildnodeStatements RBRACE SEMICOLON
-
-    BUILDNODE  shift, and go to state 1
-
-    buildnodeStatements  go to state 37
-    buildnodeStatement   go to state 38
-
-
-state 34
-
-   17 number: NUMBER PLUS . number
-
-    NUMBER  shift, and go to state 30
-    VAR     shift, and go to state 31
-
-    number  go to state 39
-
-
-state 35
-
-   18 number: VAR PLUS . number
-
-    NUMBER  shift, and go to state 30
-    VAR     shift, and go to state 31
-
-    number  go to state 40
-
-
-state 36
-
-    8 buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON . ISACHILDOF EQUAL string SEMICOLON RBRACE SEMICOLON
-    9                   | BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON . RBRACE SEMICOLON
-
-    ISACHILDOF  shift, and go to state 41
-    RBRACE      shift, and go to state 42
-
-
-state 37
-
-   10 forStatement: FOR VAR IN LBRACKET NUMBER COLON NUMBER RBRACKET LBRACE buildnodeStatements . RBRACE SEMICOLON
-
-    RBRACE  shift, and go to state 43
-
-
-state 38
-
-    6 buildnodeStatements: buildnodeStatement .
-    7                    | buildnodeStatement . buildnodeStatements
-
-    BUILDNODE  shift, and go to state 1
-
-    $default  reduce using rule 6 (buildnodeStatements)
-
-    buildnodeStatements  go to state 44
-    buildnodeStatement   go to state 38
-
-
-state 39
-
-   17 number: NUMBER PLUS number .
-
-    $default  reduce using rule 17 (number)
-
-
-state 40
-
-   18 number: VAR PLUS number .
-
-    $default  reduce using rule 18 (number)
-
-
-state 41
-
-    8 buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON ISACHILDOF . EQUAL string SEMICOLON RBRACE SEMICOLON
-
-    EQUAL  shift, and go to state 45
-
-
-state 42
-
-    9 buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON RBRACE . SEMICOLON
-
-    SEMICOLON  shift, and go to state 46
-
-
-state 43
-
-   10 forStatement: FOR VAR IN LBRACKET NUMBER COLON NUMBER RBRACKET LBRACE buildnodeStatements RBRACE . SEMICOLON
-
-    SEMICOLON  shift, and go to state 47
-
-
-state 44
-
-    7 buildnodeStatements: buildnodeStatement buildnodeStatements .
-
-    $default  reduce using rule 7 (buildnodeStatements)
-
-
-state 45
-
-    8 buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON ISACHILDOF EQUAL . string SEMICOLON RBRACE SEMICOLON
-
-    VAR     shift, and go to state 16
-    STRING  shift, and go to state 17
-
-    string  go to state 48
-
-
-state 46
-
-    9 buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON RBRACE SEMICOLON .
-
-    $default  reduce using rule 9 (buildnodeStatement)
-
-
-state 47
-
-   10 forStatement: FOR VAR IN LBRACKET NUMBER COLON NUMBER RBRACKET LBRACE buildnodeStatements RBRACE SEMICOLON .
-
-    $default  reduce using rule 10 (forStatement)
-
-
-state 48
-
-    8 buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON ISACHILDOF EQUAL string . SEMICOLON RBRACE SEMICOLON
-
-    SEMICOLON  shift, and go to state 49
-
-
-state 49
-
-    8 buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON ISACHILDOF EQUAL string SEMICOLON . RBRACE SEMICOLON
-
-    RBRACE  shift, and go to state 50
-
-
-state 50
-
-    8 buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON ISACHILDOF EQUAL string SEMICOLON RBRACE . SEMICOLON
-
-    SEMICOLON  shift, and go to state 51
-
-
-state 51
-
-    8 buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON ISACHILDOF EQUAL string SEMICOLON RBRACE SEMICOLON .
-
-    $default  reduce using rule 8 (buildnodeStatement)
+    $default  reduce using rule 5 (buildnodeStatement)

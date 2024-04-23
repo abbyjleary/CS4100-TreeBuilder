@@ -1,9 +1,8 @@
 %start start
-%token BUILDNODE FOR NUMBER VAR STRING IN NAME WEIGHT ISACHILDOF LBRACE RBRACE LBRACKET RBRACKET SEMICOLON EQUAL COLON PLUS
-
+%token BUILDNODE FOR NUMBER VAR STRING IN NAME WEIGHT ISACHILDOF
 %{
 
-#include "parse_tree.h"
+#include "tree_node.h"
 #include <string>
 
 using namespace std;
@@ -11,18 +10,16 @@ using namespace std;
 int yylex();
 void yyerror(const char *);
 
-struct nodeArgs {
-    char* name;
-    int weight;
-    char* isachildof;
-
-};
-
 %}
 
 %union {
-    int number;
-    char *stringPtr;
+    char *str;
+    stringExpression *pStr;
+    intExpression *pInt;
+    statement *pState;
+    compoundStatement *pCState;
+    strVariable *pStrVar;
+    intVariable *pIntVar;
 }
 
 %{
@@ -34,56 +31,78 @@ extern void yyerror(char *String);
    
 %}
 
-// Token definitions
-/* %type <statePtr> buildnodeStatement forStatement */
-
+%type <str> VAR STRING NUMBER
+%type <pStr> stringExpression
+%type <pInt> intExpression
+%type <pState> statement buildnodeStatement
+/* %type <pState> statement buildnodeStatement forStatement */
+%type <pCState> start prog
+/* %type <pStrVar> strVariable */
 
 
 %%
 
-start : statements {cout << "statements" << endl;}
+start : prog 
+    {
+        cout << "start" << endl;
+        return 1;
+        // map<string, int> mySymTable;
+        // $$ = $1;
+        // $1 -> evaluateStatement(mySymTable);
+    }
     ;
 
-/* statements : {printf("jklfjdlkajklj");}
-    ; */
-
-statements: statement {printf("statements");}
-    | statement statements {printf("statement statements");}
+prog: statement prog {$$ = new compoundStatement($1, $2);}
+    | {$$ = NULL;}
     ; 
 
-/* statement: {printf("statement");} */
- statement: buildnodeStatement {printf("buildnode statement");}
-    | forStatement {printf("for statement");}
+statement: buildnodeStatement {$$ = $1;}
+    /* | forStatement {$$ = $1;} */
     ;
 
-buildnodeStatements: buildnodeStatement {printf("buildnode root");}
-    | buildnodeStatement buildnodeStatements {printf("buildnode root");}
-    ; 
-
-buildnodeStatement: BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON ISACHILDOF EQUAL string SEMICOLON RBRACE SEMICOLON {printf("buildnode child");}
-    | BUILDNODE LBRACE NAME EQUAL string SEMICOLON WEIGHT EQUAL number SEMICOLON RBRACE SEMICOLON {printf("buildnode root");}
-    ;
-
-forStatement: FOR VAR IN LBRACKET NUMBER COLON NUMBER RBRACKET LBRACE buildnodeStatements RBRACE SEMICOLON {printf("for");};
-
-/* something is wrong here, use the expressions in tree_node.h */
-
-/* string: STRING
-    | VAR
-    | STRING PLUS string
-    | VAR PLUS string
-    ;
-
-number: NUMBER 
+buildnodeStatement: 
+    BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';' 
         {
-            $$ = $1;
+            cout << "jfldsjak" << endl;
+            $$ = new buildNodeStatement($5, $9, $13);
         }
-    | VAR 
-        { 
+    | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
+        {
+            $$ = new buildNodeStatement($5, $9, NULL);
         }
-    | NUMBER PLUS number 
-    | VAR PLUS number 
-    ; */
+    ;
+
+intExpression:
+    NUMBER 
+        {
+            cout << "string: " << $1 << endl;
+            $$ = new intConstant(atoi($1));
+        }
+    | VAR
+        {
+            $$ = new intVariable($1);
+        }
+    | intExpression '+' intExpression
+        {
+            $$ = new plusIntExpression($1, $3);
+        }
+
+stringExpression:
+    STRING
+        {
+            cout << "string: " << $1 << endl;
+            $$ = new strConstant($1);
+        }
+    | VAR
+        {
+            $$ = new strVariable($1);
+        }
+    | stringExpression '+' stringExpression
+        {
+            $$ = new plusStrExpression($1, $3);
+        }
+/* forStatement: FOR variable IN '[' intExpression ':' intExpression ']' '{' buildnodeStatements '}' '}' {printf("for");}; */
+
 
 %%
 #include "lex.yy.c"

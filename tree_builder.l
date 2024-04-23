@@ -30,22 +30,6 @@ weight {return WEIGHT;}
 
 isachildof {return ISACHILDOF;}
 
-"[" {return LBRACKET;}
-
-"]" {return RBRACKET;}
-
-"{" {return LBRACE;}
-
-"}" {return RBRACE;}
-
-";" {return SEMICOLON;}
-
-"=" {return EQUAL;}
-
-":" {return COLON;}
-
-"+" {return PLUS;}
-
 {D}* {return NUMBER;}
 
 {LD}{LDU}* {return VAR;}
@@ -54,13 +38,11 @@ isachildof {return ISACHILDOF;}
 
 [ \t\n\f\r] { }
 
-. { }
+
+
+. { return yytext[0]; }
 
 %%
-
-int yywrap() {
-    return 1;
-}
 
 // int main() {
 //     int token;
