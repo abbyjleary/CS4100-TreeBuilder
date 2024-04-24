@@ -21,9 +21,9 @@ Grammar
     2 prog: statement prog
     3     | /* empty */
 
-    4 statement: buildnodeStatement
+    4 statement: buildNodeStatement
 
-    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
     6                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
 
     7 intExpression: NUMBER
@@ -69,7 +69,7 @@ prog (23)
     on left: 2 3, on right: 1 2
 statement (24)
     on left: 4, on right: 2
-buildnodeStatement (25)
+buildNodeStatement (25)
     on left: 5 6, on right: 4
 intExpression (26)
     on left: 7 8 9, on right: 5 6 9
@@ -88,12 +88,12 @@ state 0
     start               go to state 2
     prog                go to state 3
     statement           go to state 4
-    buildnodeStatement  go to state 5
+    buildNodeStatement  go to state 5
 
 
 state 1
 
-    5 buildnodeStatement: BUILDNODE . '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    5 buildNodeStatement: BUILDNODE . '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
     6                   | BUILDNODE . '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
 
     '{'  shift, and go to state 6
@@ -123,19 +123,19 @@ state 4
 
     prog                go to state 8
     statement           go to state 4
-    buildnodeStatement  go to state 5
+    buildNodeStatement  go to state 5
 
 
 state 5
 
-    4 statement: buildnodeStatement .
+    4 statement: buildNodeStatement .
 
     $default  reduce using rule 4 (statement)
 
 
 state 6
 
-    5 buildnodeStatement: BUILDNODE '{' . NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    5 buildNodeStatement: BUILDNODE '{' . NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
     6                   | BUILDNODE '{' . NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
 
     NAME  shift, and go to state 9
@@ -157,7 +157,7 @@ state 8
 
 state 9
 
-    5 buildnodeStatement: BUILDNODE '{' NAME . '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    5 buildNodeStatement: BUILDNODE '{' NAME . '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
     6                   | BUILDNODE '{' NAME . '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
 
     '='  shift, and go to state 10
@@ -165,7 +165,7 @@ state 9
 
 state 10
 
-    5 buildnodeStatement: BUILDNODE '{' NAME '=' . stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    5 buildNodeStatement: BUILDNODE '{' NAME '=' . stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
     6                   | BUILDNODE '{' NAME '=' . stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
 
     VAR     shift, and go to state 11
@@ -190,7 +190,7 @@ state 12
 
 state 13
 
-    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression . ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression . ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
     6                   | BUILDNODE '{' NAME '=' stringExpression . ';' WEIGHT '=' intExpression ';' '}' ';'
    12 stringExpression: stringExpression . '+' stringExpression
 
@@ -200,7 +200,7 @@ state 13
 
 state 14
 
-    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' . WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' . WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
     6                   | BUILDNODE '{' NAME '=' stringExpression ';' . WEIGHT '=' intExpression ';' '}' ';'
 
     WEIGHT  shift, and go to state 16
@@ -218,7 +218,7 @@ state 15
 
 state 16
 
-    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT . '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT . '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
     6                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT . '=' intExpression ';' '}' ';'
 
     '='  shift, and go to state 18
@@ -237,7 +237,7 @@ state 17
 
 state 18
 
-    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' . intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' . intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
     6                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' . intExpression ';' '}' ';'
 
     NUMBER  shift, and go to state 19
@@ -262,7 +262,7 @@ state 20
 
 state 21
 
-    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression . ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression . ';' ISACHILDOF '=' stringExpression ';' '}' ';'
     6                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression . ';' '}' ';'
     9 intExpression: intExpression . '+' intExpression
 
@@ -272,7 +272,7 @@ state 21
 
 state 22
 
-    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' . ISACHILDOF '=' stringExpression ';' '}' ';'
+    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' . ISACHILDOF '=' stringExpression ';' '}' ';'
     6                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' . '}' ';'
 
     ISACHILDOF  shift, and go to state 24
@@ -291,14 +291,14 @@ state 23
 
 state 24
 
-    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF . '=' stringExpression ';' '}' ';'
+    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF . '=' stringExpression ';' '}' ';'
 
     '='  shift, and go to state 27
 
 
 state 25
 
-    6 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' . ';'
+    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' . ';'
 
     ';'  shift, and go to state 28
 
@@ -316,7 +316,7 @@ state 26
 
 state 27
 
-    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' . stringExpression ';' '}' ';'
+    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' . stringExpression ';' '}' ';'
 
     VAR     shift, and go to state 11
     STRING  shift, and go to state 12
@@ -326,14 +326,14 @@ state 27
 
 state 28
 
-    6 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';' .
+    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';' .
 
-    $default  reduce using rule 6 (buildnodeStatement)
+    $default  reduce using rule 6 (buildNodeStatement)
 
 
 state 29
 
-    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression . ';' '}' ';'
+    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression . ';' '}' ';'
    12 stringExpression: stringExpression . '+' stringExpression
 
     ';'  shift, and go to state 30
@@ -342,20 +342,20 @@ state 29
 
 state 30
 
-    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' . '}' ';'
+    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' . '}' ';'
 
     '}'  shift, and go to state 31
 
 
 state 31
 
-    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' . ';'
+    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' . ';'
 
     ';'  shift, and go to state 32
 
 
 state 32
 
-    5 buildnodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';' .
+    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';' .
 
-    $default  reduce using rule 5 (buildnodeStatement)
+    $default  reduce using rule 5 (buildNodeStatement)

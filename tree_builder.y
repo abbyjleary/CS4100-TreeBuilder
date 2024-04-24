@@ -4,7 +4,7 @@
 
 %{
 
-#include "tree_node.h"
+#include "parse_tree.h"
 #include <string>
 
 using namespace std;
@@ -34,9 +34,9 @@ extern void yyerror(char *String);
 %type <str> VAR STRING NUMBER
 %type <pStr> stringExpression
 %type <pInt> intExpression
-%type <pState> statement buildnodeStatement
-/* %type <pState> statement buildnodeStatement forStatement */
-%type <pCState> start prog
+%type <pState> statement buildNodeStatement
+/* %type <pState> statement buildNodeStatement forStatement */
+%type <pCState> start prog buildNodeStatements
 /* %type <pStrVar> strVariable */
 
 
@@ -44,7 +44,7 @@ extern void yyerror(char *String);
 
 start : prog 
     {
-        cout << "start" << endl;
+        cout << $1 << endl;
         return 1;
         // map<string, int> mySymTable;
         // $$ = $1;
@@ -56,11 +56,11 @@ prog: statement prog {cout << "!!!!!";$$ = new compoundStatement($1, $2);}
     | {$$ = NULL;}
     ; 
 
-statement: buildnodeStatement {$$ = $1;}
-    /* | forStatement {$$ = $1;} */
+statement: buildNodeStatement {$$ = $1;}
+    | forStatement {$$ = $1;}
     ;
 
-buildnodeStatement: 
+buildNodeStatement: 
     BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';' 
         {
             cout << "jfldsjak" << endl;
@@ -101,7 +101,12 @@ stringExpression:
         {
             $$ = new plusStrExpression($1, $3);
         }
-/* forStatement: FOR variable IN '[' intExpression ':' intExpression ']' '{' buildnodeStatements '}' '}' {printf("for");}; */
+
+forStatement: FOR VAR IN '[' intExpression ':' intExpression ']' '{' buildNodeStatements '}' '}' {$$ = new };
+
+buildNodeStatements: buildNodeStatement buildNodeStatements {$$ = new buildNodeStatements($1, $2);}
+    | {$$ = NULL;}
+
 
 
 %%
