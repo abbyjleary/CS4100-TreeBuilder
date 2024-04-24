@@ -34,7 +34,7 @@ extern void yyerror(char *String);
 %type <str> VAR STRING NUMBER
 %type <pStr> stringExpression
 %type <pInt> intExpression
-%type <pState> statement buildNodeStatement
+%type <pState> statement buildNodeStatement forStatement
 /* %type <pState> statement buildNodeStatement forStatement */
 %type <pCState> start prog buildNodeStatements
 /* %type <pStrVar> strVariable */
@@ -102,7 +102,7 @@ stringExpression:
             $$ = new plusStrExpression($1, $3);
         }
 
-forStatement: FOR VAR IN '[' intExpression ':' intExpression ']' '{' buildNodeStatements '}' '}' {$$ = new };
+forStatement: FOR VAR IN '[' intExpression ':' intExpression ']' '{' buildNodeStatements '}' '}' {$$ = new intForStatement($2, $5, $7, $10)};
 
 buildNodeStatements: buildNodeStatement buildNodeStatements {$$ = new buildNodeStatements($1, $2);}
     | {$$ = NULL;}

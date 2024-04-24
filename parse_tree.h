@@ -2,16 +2,16 @@
 #include <string>
 #include <iostream>
 #include <map>
+#include "tree_node.h"
 
 using namespace std;
-
-// change these later to call an evaluate expression function that evaluates the expression into nodes with these parameters
-// will need a symbol table but i am a little lost on why or how
 
 // done?
 class intExpression
 {
 public:
+    // should replace them with these because we actually dont need the symtable
+    // virtual int evaluateStatement(pair<string, int> &vars, vector<treeNode> &nodes) = 0;
     virtual int evaluateStatement(map<string, int> &symTable) = 0;
 };
 
@@ -59,37 +59,19 @@ private:
 };
 
 // todo
-class strForStatement
+class rangeExpression
 {
-    // holds var as a variable
-    // holds start as an int exp
-    // holds end as an int exp
 public:
-    strForStatement(strVariable *v, rangeExpression *r)
-    {
-        var = v;
-        range = r;
-    };
+    rangeExpression(){};
 
-    void evaluateStatement(map<string, int> &symTable)
+    virtual void evaluateStatement(map<string, int> &symTable)
     {
-        // evaluate the range
-        // for each value in the range, evaluate the var and add it to the symbol table
+        // evaluate the start and end expressions
+        // return a range from start to end
     }
 
 private:
-    strVariable *var;
-    rangeExpression *range;
-};
-
-// todo
-class intForStatement
-{
-    // holds var as a variable
-private:
-    intVariable *var;
-    intExpression *start;
-    intExpression *end;
+    vector<stringExpression> *strings;
 };
 
 // done
@@ -101,7 +83,7 @@ public:
 };
 
 // done
-class compoundStatement : public statement
+class compoundStatement
 {
 public:
     compoundStatement(statement *f, compoundStatement *r)
@@ -125,34 +107,6 @@ public:
 private:
     statement *first;
     compoundStatement *rest;
-};
-
-// todo
-class buildNodeStatements : compoundStatement
-{
-    // (a little lost on this one too but look at the example)
-public:
-    buildNodeStatements(buildNodeStatement *f, buildNodeStatements *r)
-    {
-        first = f;
-        rest = r;
-    };
-
-    virtual void evaluateStatement(map<string, int> &symTable)
-    {
-        if (first != NULL)
-        {
-            first->evaluateStatement(symTable);
-        }
-        if (rest != NULL)
-        {
-            rest->evaluateStatement(symTable);
-        }
-    }
-
-private:
-    buildNodeStatement *first;
-    buildNodeStatements *rest;
 };
 
 // todo
@@ -181,19 +135,81 @@ private:
 };
 
 // todo
-class rangeExpression
+class buildNodeStatements : public compoundStatement
 {
+    // (a little lost on this one too but look at the example)
 public:
-    rangeExpression(){};
+    buildNodeStatements(buildNodeStatement *f, buildNodeStatements *r)
+    {
+        first = f;
+        rest = r;
+    };
 
     virtual void evaluateStatement(map<string, int> &symTable)
     {
-        // evaluate the start and end expressions
-        // return a range from start to end
+        if (first != NULL)
+        {
+            first->evaluateStatement(symTable);
+        }
+        if (rest != NULL)
+        {
+            rest->evaluateStatement(symTable);
+        }
     }
 
 private:
-    vector *stringExpression;
+    buildNodeStatement *first;
+    buildNodeStatements *rest;
+};
+
+// todo
+class strForStatement
+{
+    // holds var as a variable
+    // holds start as an int exp
+    // holds end as an int exp
+public:
+    strForStatement(strVariable *v, rangeExpression *r)
+    {
+        var = v;
+        range = r;
+    };
+
+    void evaluateStatement(map<string, int> &symTable)
+    {
+        // evaluate the range
+        // for each value in the range, evaluate the var and add it to the symbol table
+    }
+
+private:
+    strVariable *var;
+    rangeExpression *range;
+};
+// todo
+class intForStatement
+{
+    // holds var as a variable
+    // holds start as an int exp
+    // holds end as an int exp
+public:
+    intForStatement(char *v, intExpression *s, intExpression *e, buildNodeStatements *b)
+    {
+        var = v;
+        start = s;
+        end = e;
+        buildNodes = b;
+    };
+
+    void evaluateStatement(map<string, int> &symTable)
+    {
+        // evaluate the start and end expressions
+        // for each value in the range, evaluate the var and add it to the symbol table
+    }
+private:
+    char* var;
+    intExpression *start;
+    intExpression *end;
+    buildNodeStatements *buildNodes;
 };
 
 // todo
