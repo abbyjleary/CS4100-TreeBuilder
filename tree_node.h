@@ -1,13 +1,13 @@
-#include <vector>
 #include <string>
+#include <vector>
 #include <iostream>
-#include <map>
 
 using namespace std;
 
+
 struct treeNode
 {
-    string name;
+    char* name;
     int weight;
     vector<treeNode *> children;
 };

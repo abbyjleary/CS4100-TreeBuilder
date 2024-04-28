@@ -1,18 +1,21 @@
 default: treeBuilder
 
-# treeBuilder: lex.yy.o tree_builder.tab.o
-# 	g++ -o treeBuilder lex.yy.o tree_builder.tab.o
+treeBuilder: lex.yy.o tree_builder.tab.o main.o
+	g++ -o treeBuilder lex.yy.o tree_builder.tab.o main.o
 
-# lex.yy.o tree_builder.tab.o: lex.yy.c tree_builder.tab.c tree_node.h parse_tree.h
+lex.yy.o tree_builder.tab.o: lex.yy.c tree_builder.tab.c tree_node.h parse_tree.h
 
-treeBuilder: tree_builder.tab.c lex.yy.c parse_tree.h tree_node.h
-	g++ -o treeBuilder tree_builder.tab.c -ll
+#treeBuilder: tree_builder.tab.c lex.yy.c parse_tree.h tree_node.h
+#	g++ -o treeBuilder tree_builder.tab.c -ll
 
 lex.yy.c: tree_builder.l
 	lex -o lex.yy.c tree_builder.l
 
 tree_builder.tab.c: tree_builder.y
 	bison -o tree_builder.tab.c -t -v tree_builder.y
+
+main.o: main.cc
+	g++ -c main.cc
 
 clean:
 	rm -f treeBuilder lex.yy.o tree_builder.tab.o lex.yy.c tree_builder.tab.c tree_builder.tab.h
