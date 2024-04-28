@@ -58,21 +58,21 @@ private:
     string value;
 };
 
-// todo
-class rangeExpression
-{
-public:
-    rangeExpression(){};
+// // todo
+// class rangeExpression
+// {
+// public:
+//     rangeExpression(){};
 
-    virtual void evaluateStatement(map<string, int> &symTable)
-    {
-        // evaluate the start and end expressions
-        // return a range from start to end
-    }
+//     virtual void evaluateStatement(map<string, int> &symTable)
+//     {
+//         // evaluate the start and end expressions
+//         // return a range from start to end
+//     }
 
-private:
-    vector<stringExpression> *strings;
-};
+// private:
+//     vector<stringExpression> *strings;
+// };
 
 // done
 class statement
@@ -134,83 +134,84 @@ private:
     stringExpression *isChildOf;
 };
 
-// todo
-class buildNodeStatements : public compoundStatement
-{
-    // (a little lost on this one too but look at the example)
-public:
-    buildNodeStatements(buildNodeStatement *f, buildNodeStatements *r)
-    {
-        first = f;
-        rest = r;
-    };
+// // todo
+// class buildNodeStatements : public compoundStatement
+// {
+//     // (a little lost on this one too but look at the example)
+// public:
+//     buildNodeStatements(buildNodeStatement *f, buildNodeStatements *r)
+//     {
+//         first = f;
+//         rest = r;
+//     };
 
-    virtual void evaluateStatement(map<string, int> &symTable)
-    {
-        if (first != NULL)
-        {
-            first->evaluateStatement(symTable);
-        }
-        if (rest != NULL)
-        {
-            rest->evaluateStatement(symTable);
-        }
-    }
+//     virtual void evaluateStatement(map<string, int> &symTable)
+//     {
+//         if (first != NULL)
+//         {
+//             first->evaluateStatement(symTable);
+//         }
+//         if (rest != NULL)
+//         {
+//             rest->evaluateStatement(symTable);
+//         }
+//     }
 
-private:
-    buildNodeStatement *first;
-    buildNodeStatements *rest;
-};
+// private:
+//     buildNodeStatement *first;
+//     buildNodeStatements *rest;
+// };
 
-// todo
-class strForStatement
-{
-    // holds var as a variable
-    // holds start as an int exp
-    // holds end as an int exp
-public:
-    strForStatement(strVariable *v, rangeExpression *r)
-    {
-        var = v;
-        range = r;
-    };
+// // todo
+// class strForStatement
+// {
+//     // holds var as a variable
+//     // holds start as an int exp
+//     // holds end as an int exp
+// public:
+//     strForStatement(strVariable *v, rangeExpression *r)
+//     {
+//         var = v;
+//         range = r;
+//     };
 
-    void evaluateStatement(map<string, int> &symTable)
-    {
-        // evaluate the range
-        // for each value in the range, evaluate the var and add it to the symbol table
-    }
+//     void evaluateStatement(map<string, int> &symTable)
+//     {
+//         // evaluate the range
+//         // for each value in the range, evaluate the var and add it to the symbol table
+//     }
 
-private:
-    strVariable *var;
-    rangeExpression *range;
-};
-// todo
-class intForStatement
-{
-    // holds var as a variable
-    // holds start as an int exp
-    // holds end as an int exp
-public:
-    intForStatement(char *v, intExpression *s, intExpression *e, buildNodeStatements *b)
-    {
-        var = v;
-        start = s;
-        end = e;
-        buildNodes = b;
-    };
+// private:
+//     strVariable *var;
+//     rangeExpression *range;
+// };
 
-    void evaluateStatement(map<string, int> &symTable)
-    {
-        // evaluate the start and end expressions
-        // for each value in the range, evaluate the var and add it to the symbol table
-    }
-private:
-    char* var;
-    intExpression *start;
-    intExpression *end;
-    buildNodeStatements *buildNodes;
-};
+// // todo
+// class intForStatement
+// {
+//     // holds var as a variable
+//     // holds start as an int exp
+//     // holds end as an int exp
+// public:
+//     intForStatement(char *v, intExpression *s, intExpression *e, buildNodeStatements *b)
+//     {
+//         var = v;
+//         start = s;
+//         end = e;
+//         buildNodes = b;
+//     };
+
+//     void evaluateStatement(map<string, int> &symTable)
+//     {
+//         // evaluate the start and end expressions
+//         // for each value in the range, evaluate the var and add it to the symbol table
+//     }
+// private:
+//     char* var;
+//     intExpression *start;
+//     intExpression *end;
+//     buildNodeStatements *buildNodes;
+// };
 
 // todo
 class manyStrings
