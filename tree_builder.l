@@ -6,9 +6,10 @@
 * Abby Leary and Adeline Fitzwater
 */
 
-#include <iostream>
+#include <string.h>
+#include <ctype.h>
+#include "tree_builder.tab.c"
 
-using namespace std;
 
 %}
 

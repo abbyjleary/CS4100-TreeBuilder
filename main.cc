@@ -1,48 +1,39 @@
+#include <iostream>
+#include <fstream>
 #include "tree_node.h"
 
 using namespace std;
 
-
-int main(){
-    
-treeNode A;
-A.name = "A";
-A.weight = 2;
-
-treeNode B;
-B.name = "B";
-B.weight = 2;
-
-treeNode C;
-C.name = "C";
-C.weight = 3;
-
-treeNode D;
-D.name = "D";
-D.weight = 4;
-
-treeNode E;
-E.name = "E";
-E.weight = 4;
-
-treeNode F;
-F.name = "F";
-F.weight = 4;
-
-C.children.push_back(&F);
-C.children.push_back(&E);
-C.children.push_back(&D);
-
-B.children.push_back(&C);
-
-treeNode root;
-root.name = "root";
-root.weight = 5;
-root.children.push_back(&C);
-root.children.push_back(&B);
-root.children.push_back(&A);
-
-printTree(&root);
+extern "C" {
+#include "tree_builder.tab.c"
+#include "lex.yy.c"
+}
 
 
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        cerr << "Usage: " << argv[0] << " input_file" << endl;
+        return 1;
+    }
+
+    // Open the input file
+    ifstream inputFile(argv[1]);
+    if (!inputFile) {
+        cerr << "Error: Unable to open input file." << endl;
+        return 1;
+    }
+
+    // Set lex/yacc to read from the input file
+    yyin = &inputFile;
+
+    // Parse using yyparse and print
+    if (yyparse() == 0) {
+        cout << "Parsing successful" << endl;
+
+    }
+    else {
+        cout << "Parsing failed" << endl;
+    }
+
+    return 0;
 }

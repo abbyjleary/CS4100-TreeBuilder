@@ -1,361 +1,637 @@
-Terminals which are not used
+Nonterminals useless in grammar
 
-   FOR
-   IN
-   '['
-   ']'
-   ':'
-   ','
+    prog
 
 
-State 17 conflicts: 1 shift/reduce
-State 26 conflicts: 1 shift/reduce
+Terminals unused in grammar
+
+    ','
+
+
+Rules useless in parser due to conflicts
+
+   12 stringExpression: VAR
+
+
+State 17 conflicts: 3 reduce/reduce
+State 28 conflicts: 1 shift/reduce
+State 29 conflicts: 1 shift/reduce
+State 31 conflicts: 1 shift/reduce
+State 32 conflicts: 1 shift/reduce
+State 43 conflicts: 1 shift/reduce
 
 
 Grammar
 
     0 $accept: start $end
 
-    1 start: prog
+    1 start: commands
 
-    2 prog: statement prog
-    3     | /* empty */
+    2 commands: statement commands
+    3         | ε
 
     4 statement: buildNodeStatement
+    5          | forStatement
 
-    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
-    6                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
+    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    7                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
 
-    7 intExpression: NUMBER
-    8              | VAR
-    9              | intExpression '+' intExpression
+    8 intExpression: NUMBER
+    9              | VAR
+   10              | intExpression '+' intExpression
 
-   10 stringExpression: STRING
-   11                 | VAR
-   12                 | stringExpression '+' stringExpression
+   11 stringExpression: STRING
+   12                 | VAR
+   13                 | stringExpression '+' stringExpression
+   14                 | stringExpression '+' intExpression
+   15                 | intExpression '+' stringExpression
+
+   16 forStatement: FOR VAR IN '[' intExpression ':' intExpression ']' '{' buildNodeStatements '}'
+   17             | FOR VAR IN '[' stringExpression ']' '{' buildNodeStatements '}'
+
+   18 buildNodeStatements: buildNodeStatement buildNodeStatements
+   19                    | ε
 
 
 Terminals, with rules where they appear
 
-$end (0) 0
-'+' (43) 9 12
-',' (44)
-':' (58)
-';' (59) 5 6
-'=' (61) 5 6
-'[' (91)
-']' (93)
-'{' (123) 5 6
-'}' (125) 5 6
-error (256)
-BUILDNODE (258) 5 6
-FOR (259)
-NUMBER (260) 7
-VAR (261) 8 11
-STRING (262) 10
-IN (263)
-NAME (264) 5 6
-WEIGHT (265) 5 6
-ISACHILDOF (266) 5
+    $end (0) 0
+    '+' (43) 10 13 14 15
+    ',' (44)
+    ':' (58) 16
+    ';' (59) 6 7
+    '=' (61) 6 7
+    '[' (91) 16 17
+    ']' (93) 16 17
+    '{' (123) 6 7 16 17
+    '}' (125) 6 7 16 17
+    error (256)
+    BUILDNODE (258) 6 7
+    FOR (259) 16 17
+    NUMBER <str> (260) 8
+    VAR <str> (261) 9 12 16 17
+    STRING <str> (262) 11
+    IN (263) 16 17
+    NAME (264) 6 7
+    WEIGHT (265) 6 7
+    ISACHILDOF (266) 6
 
 
 Nonterminals, with rules where they appear
 
-$accept (21)
-    on left: 0
-start (22)
-    on left: 1, on right: 0
-prog (23)
-    on left: 2 3, on right: 1 2
-statement (24)
-    on left: 4, on right: 2
-buildNodeStatement (25)
-    on left: 5 6, on right: 4
-intExpression (26)
-    on left: 7 8 9, on right: 5 6 9
-stringExpression (27)
-    on left: 10 11 12, on right: 5 6 12
+    $accept (21)
+        on left: 0
+    start <pCState> (22)
+        on left: 1
+        on right: 0
+    commands (23)
+        on left: 2 3
+        on right: 1 2
+    statement <pState> (24)
+        on left: 4 5
+        on right: 2
+    buildNodeStatement <pState> (25)
+        on left: 6 7
+        on right: 4 18
+    intExpression <pInt> (26)
+        on left: 8 9 10
+        on right: 6 7 10 14 15 16
+    stringExpression <pStr> (27)
+        on left: 11 12 13 14 15
+        on right: 6 7 13 14 15 17
+    forStatement <pState> (28)
+        on left: 16 17
+        on right: 5
+    buildNodeStatements <pCState> (29)
+        on left: 18 19
+        on right: 16 17 18
 
 
-state 0
+State 0
 
-    0 $accept: . start $end
+    0 $accept: • start $end
 
     BUILDNODE  shift, and go to state 1
+    FOR        shift, and go to state 2
 
-    $default  reduce using rule 3 (prog)
+    $default  reduce using rule 3 (commands)
 
-    start               go to state 2
-    prog                go to state 3
-    statement           go to state 4
-    buildNodeStatement  go to state 5
-
-
-state 1
-
-    5 buildNodeStatement: BUILDNODE . '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
-    6                   | BUILDNODE . '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
-
-    '{'  shift, and go to state 6
+    start               go to state 3
+    commands            go to state 4
+    statement           go to state 5
+    buildNodeStatement  go to state 6
+    forStatement        go to state 7
 
 
-state 2
+State 1
 
-    0 $accept: start . $end
+    6 buildNodeStatement: BUILDNODE • '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    7                   | BUILDNODE • '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
 
-    $end  shift, and go to state 7
+    '{'  shift, and go to state 8
 
 
-state 3
+State 2
 
-    1 start: prog .
+   16 forStatement: FOR • VAR IN '[' intExpression ':' intExpression ']' '{' buildNodeStatements '}'
+   17             | FOR • VAR IN '[' stringExpression ']' '{' buildNodeStatements '}'
+
+    VAR  shift, and go to state 9
+
+
+State 3
+
+    0 $accept: start • $end
+
+    $end  shift, and go to state 10
+
+
+State 4
+
+    1 start: commands •
 
     $default  reduce using rule 1 (start)
 
 
-state 4
+State 5
 
-    2 prog: statement . prog
+    2 commands: statement • commands
 
     BUILDNODE  shift, and go to state 1
+    FOR        shift, and go to state 2
 
-    $default  reduce using rule 3 (prog)
+    $default  reduce using rule 3 (commands)
 
-    prog                go to state 8
-    statement           go to state 4
-    buildNodeStatement  go to state 5
+    commands            go to state 11
+    statement           go to state 5
+    buildNodeStatement  go to state 6
+    forStatement        go to state 7
 
 
-state 5
+State 6
 
-    4 statement: buildNodeStatement .
+    4 statement: buildNodeStatement •
 
     $default  reduce using rule 4 (statement)
 
 
-state 6
+State 7
 
-    5 buildNodeStatement: BUILDNODE '{' . NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
-    6                   | BUILDNODE '{' . NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
+    5 statement: forStatement •
 
-    NAME  shift, and go to state 9
+    $default  reduce using rule 5 (statement)
 
 
-state 7
+State 8
 
-    0 $accept: start $end .
+    6 buildNodeStatement: BUILDNODE '{' • NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    7                   | BUILDNODE '{' • NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
+
+    NAME  shift, and go to state 12
+
+
+State 9
+
+   16 forStatement: FOR VAR • IN '[' intExpression ':' intExpression ']' '{' buildNodeStatements '}'
+   17             | FOR VAR • IN '[' stringExpression ']' '{' buildNodeStatements '}'
+
+    IN  shift, and go to state 13
+
+
+State 10
+
+    0 $accept: start $end •
 
     $default  accept
 
 
-state 8
+State 11
 
-    2 prog: statement prog .
+    2 commands: statement commands •
 
-    $default  reduce using rule 2 (prog)
-
-
-state 9
-
-    5 buildNodeStatement: BUILDNODE '{' NAME . '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
-    6                   | BUILDNODE '{' NAME . '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
-
-    '='  shift, and go to state 10
+    $default  reduce using rule 2 (commands)
 
 
-state 10
+State 12
 
-    5 buildNodeStatement: BUILDNODE '{' NAME '=' . stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
-    6                   | BUILDNODE '{' NAME '=' . stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
+    6 buildNodeStatement: BUILDNODE '{' NAME • '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    7                   | BUILDNODE '{' NAME • '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
 
-    VAR     shift, and go to state 11
-    STRING  shift, and go to state 12
-
-    stringExpression  go to state 13
+    '='  shift, and go to state 14
 
 
-state 11
+State 13
 
-   11 stringExpression: VAR .
+   16 forStatement: FOR VAR IN • '[' intExpression ':' intExpression ']' '{' buildNodeStatements '}'
+   17             | FOR VAR IN • '[' stringExpression ']' '{' buildNodeStatements '}'
 
-    $default  reduce using rule 11 (stringExpression)
-
-
-state 12
-
-   10 stringExpression: STRING .
-
-    $default  reduce using rule 10 (stringExpression)
+    '['  shift, and go to state 15
 
 
-state 13
+State 14
 
-    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression . ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
-    6                   | BUILDNODE '{' NAME '=' stringExpression . ';' WEIGHT '=' intExpression ';' '}' ';'
-   12 stringExpression: stringExpression . '+' stringExpression
+    6 buildNodeStatement: BUILDNODE '{' NAME '=' • stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    7                   | BUILDNODE '{' NAME '=' • stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
 
-    ';'  shift, and go to state 14
-    '+'  shift, and go to state 15
+    NUMBER  shift, and go to state 16
+    VAR     shift, and go to state 17
+    STRING  shift, and go to state 18
 
-
-state 14
-
-    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' . WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
-    6                   | BUILDNODE '{' NAME '=' stringExpression ';' . WEIGHT '=' intExpression ';' '}' ';'
-
-    WEIGHT  shift, and go to state 16
+    intExpression     go to state 19
+    stringExpression  go to state 20
 
 
-state 15
+State 15
 
-   12 stringExpression: stringExpression '+' . stringExpression
+   16 forStatement: FOR VAR IN '[' • intExpression ':' intExpression ']' '{' buildNodeStatements '}'
+   17             | FOR VAR IN '[' • stringExpression ']' '{' buildNodeStatements '}'
 
-    VAR     shift, and go to state 11
-    STRING  shift, and go to state 12
+    NUMBER  shift, and go to state 16
+    VAR     shift, and go to state 17
+    STRING  shift, and go to state 18
 
-    stringExpression  go to state 17
-
-
-state 16
-
-    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT . '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
-    6                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT . '=' intExpression ';' '}' ';'
-
-    '='  shift, and go to state 18
+    intExpression     go to state 21
+    stringExpression  go to state 22
 
 
-state 17
+State 16
 
-   12 stringExpression: stringExpression . '+' stringExpression
-   12                 | stringExpression '+' stringExpression .
-
-    '+'  shift, and go to state 15
-
-    '+'       [reduce using rule 12 (stringExpression)]
-    $default  reduce using rule 12 (stringExpression)
-
-
-state 18
-
-    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' . intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
-    6                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' . intExpression ';' '}' ';'
-
-    NUMBER  shift, and go to state 19
-    VAR     shift, and go to state 20
-
-    intExpression  go to state 21
-
-
-state 19
-
-    7 intExpression: NUMBER .
-
-    $default  reduce using rule 7 (intExpression)
-
-
-state 20
-
-    8 intExpression: VAR .
+    8 intExpression: NUMBER •
 
     $default  reduce using rule 8 (intExpression)
 
 
-state 21
+State 17
 
-    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression . ';' ISACHILDOF '=' stringExpression ';' '}' ';'
-    6                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression . ';' '}' ';'
-    9 intExpression: intExpression . '+' intExpression
+    9 intExpression: VAR •
+   12 stringExpression: VAR •
 
-    ';'  shift, and go to state 22
-    '+'  shift, and go to state 23
-
-
-state 22
-
-    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' . ISACHILDOF '=' stringExpression ';' '}' ';'
-    6                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' . '}' ';'
-
-    ISACHILDOF  shift, and go to state 24
-    '}'         shift, and go to state 25
-
-
-state 23
-
-    9 intExpression: intExpression '+' . intExpression
-
-    NUMBER  shift, and go to state 19
-    VAR     shift, and go to state 20
-
-    intExpression  go to state 26
-
-
-state 24
-
-    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF . '=' stringExpression ';' '}' ';'
-
-    '='  shift, and go to state 27
-
-
-state 25
-
-    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' . ';'
-
-    ';'  shift, and go to state 28
-
-
-state 26
-
-    9 intExpression: intExpression . '+' intExpression
-    9              | intExpression '+' intExpression .
-
-    '+'  shift, and go to state 23
-
-    '+'       [reduce using rule 9 (intExpression)]
+    ';'       reduce using rule 9 (intExpression)
+    ';'       [reduce using rule 12 (stringExpression)]
+    ']'       reduce using rule 9 (intExpression)
+    ']'       [reduce using rule 12 (stringExpression)]
+    '+'       reduce using rule 9 (intExpression)
+    '+'       [reduce using rule 12 (stringExpression)]
     $default  reduce using rule 9 (intExpression)
 
 
-state 27
+State 18
 
-    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' . stringExpression ';' '}' ';'
+   11 stringExpression: STRING •
 
-    VAR     shift, and go to state 11
-    STRING  shift, and go to state 12
+    $default  reduce using rule 11 (stringExpression)
 
+
+State 19
+
+   10 intExpression: intExpression • '+' intExpression
+   15 stringExpression: intExpression • '+' stringExpression
+
+    '+'  shift, and go to state 23
+
+
+State 20
+
+    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression • ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    7                   | BUILDNODE '{' NAME '=' stringExpression • ';' WEIGHT '=' intExpression ';' '}' ';'
+   13 stringExpression: stringExpression • '+' stringExpression
+   14                 | stringExpression • '+' intExpression
+
+    ';'  shift, and go to state 24
+    '+'  shift, and go to state 25
+
+
+State 21
+
+   10 intExpression: intExpression • '+' intExpression
+   15 stringExpression: intExpression • '+' stringExpression
+   16 forStatement: FOR VAR IN '[' intExpression • ':' intExpression ']' '{' buildNodeStatements '}'
+
+    ':'  shift, and go to state 26
+    '+'  shift, and go to state 23
+
+
+State 22
+
+   13 stringExpression: stringExpression • '+' stringExpression
+   14                 | stringExpression • '+' intExpression
+   17 forStatement: FOR VAR IN '[' stringExpression • ']' '{' buildNodeStatements '}'
+
+    ']'  shift, and go to state 27
+    '+'  shift, and go to state 25
+
+
+State 23
+
+   10 intExpression: intExpression '+' • intExpression
+   15 stringExpression: intExpression '+' • stringExpression
+
+    NUMBER  shift, and go to state 16
+    VAR     shift, and go to state 17
+    STRING  shift, and go to state 18
+
+    intExpression     go to state 28
     stringExpression  go to state 29
 
 
-state 28
+State 24
 
-    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';' .
+    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' • WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    7                   | BUILDNODE '{' NAME '=' stringExpression ';' • WEIGHT '=' intExpression ';' '}' ';'
+
+    WEIGHT  shift, and go to state 30
+
+
+State 25
+
+   13 stringExpression: stringExpression '+' • stringExpression
+   14                 | stringExpression '+' • intExpression
+
+    NUMBER  shift, and go to state 16
+    VAR     shift, and go to state 17
+    STRING  shift, and go to state 18
+
+    intExpression     go to state 31
+    stringExpression  go to state 32
+
+
+State 26
+
+   16 forStatement: FOR VAR IN '[' intExpression ':' • intExpression ']' '{' buildNodeStatements '}'
+
+    NUMBER  shift, and go to state 16
+    VAR     shift, and go to state 33
+
+    intExpression  go to state 34
+
+
+State 27
+
+   17 forStatement: FOR VAR IN '[' stringExpression ']' • '{' buildNodeStatements '}'
+
+    '{'  shift, and go to state 35
+
+
+State 28
+
+   10 intExpression: intExpression • '+' intExpression
+   10              | intExpression '+' intExpression •
+   15 stringExpression: intExpression • '+' stringExpression
+
+    '+'  shift, and go to state 23
+
+    '+'       [reduce using rule 10 (intExpression)]
+    $default  reduce using rule 10 (intExpression)
+
+
+State 29
+
+   13 stringExpression: stringExpression • '+' stringExpression
+   14                 | stringExpression • '+' intExpression
+   15                 | intExpression '+' stringExpression •
+
+    '+'  shift, and go to state 25
+
+    '+'       [reduce using rule 15 (stringExpression)]
+    $default  reduce using rule 15 (stringExpression)
+
+
+State 30
+
+    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT • '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    7                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT • '=' intExpression ';' '}' ';'
+
+    '='  shift, and go to state 36
+
+
+State 31
+
+   10 intExpression: intExpression • '+' intExpression
+   14 stringExpression: stringExpression '+' intExpression •
+   15                 | intExpression • '+' stringExpression
+
+    '+'  shift, and go to state 23
+
+    '+'       [reduce using rule 14 (stringExpression)]
+    $default  reduce using rule 14 (stringExpression)
+
+
+State 32
+
+   13 stringExpression: stringExpression • '+' stringExpression
+   13                 | stringExpression '+' stringExpression •
+   14                 | stringExpression • '+' intExpression
+
+    '+'  shift, and go to state 25
+
+    '+'       [reduce using rule 13 (stringExpression)]
+    $default  reduce using rule 13 (stringExpression)
+
+
+State 33
+
+    9 intExpression: VAR •
+
+    $default  reduce using rule 9 (intExpression)
+
+
+State 34
+
+   10 intExpression: intExpression • '+' intExpression
+   16 forStatement: FOR VAR IN '[' intExpression ':' intExpression • ']' '{' buildNodeStatements '}'
+
+    ']'  shift, and go to state 37
+    '+'  shift, and go to state 38
+
+
+State 35
+
+   17 forStatement: FOR VAR IN '[' stringExpression ']' '{' • buildNodeStatements '}'
+
+    BUILDNODE  shift, and go to state 1
+
+    $default  reduce using rule 19 (buildNodeStatements)
+
+    buildNodeStatement   go to state 39
+    buildNodeStatements  go to state 40
+
+
+State 36
+
+    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' • intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    7                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' • intExpression ';' '}' ';'
+
+    NUMBER  shift, and go to state 16
+    VAR     shift, and go to state 33
+
+    intExpression  go to state 41
+
+
+State 37
+
+   16 forStatement: FOR VAR IN '[' intExpression ':' intExpression ']' • '{' buildNodeStatements '}'
+
+    '{'  shift, and go to state 42
+
+
+State 38
+
+   10 intExpression: intExpression '+' • intExpression
+
+    NUMBER  shift, and go to state 16
+    VAR     shift, and go to state 33
+
+    intExpression  go to state 43
+
+
+State 39
+
+   18 buildNodeStatements: buildNodeStatement • buildNodeStatements
+
+    BUILDNODE  shift, and go to state 1
+
+    $default  reduce using rule 19 (buildNodeStatements)
+
+    buildNodeStatement   go to state 39
+    buildNodeStatements  go to state 44
+
+
+State 40
+
+   17 forStatement: FOR VAR IN '[' stringExpression ']' '{' buildNodeStatements • '}'
+
+    '}'  shift, and go to state 45
+
+
+State 41
+
+    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression • ';' ISACHILDOF '=' stringExpression ';' '}' ';'
+    7                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression • ';' '}' ';'
+   10 intExpression: intExpression • '+' intExpression
+
+    ';'  shift, and go to state 46
+    '+'  shift, and go to state 38
+
+
+State 42
+
+   16 forStatement: FOR VAR IN '[' intExpression ':' intExpression ']' '{' • buildNodeStatements '}'
+
+    BUILDNODE  shift, and go to state 1
+
+    $default  reduce using rule 19 (buildNodeStatements)
+
+    buildNodeStatement   go to state 39
+    buildNodeStatements  go to state 47
+
+
+State 43
+
+   10 intExpression: intExpression • '+' intExpression
+   10              | intExpression '+' intExpression •
+
+    '+'  shift, and go to state 38
+
+    '+'       [reduce using rule 10 (intExpression)]
+    $default  reduce using rule 10 (intExpression)
+
+
+State 44
+
+   18 buildNodeStatements: buildNodeStatement buildNodeStatements •
+
+    $default  reduce using rule 18 (buildNodeStatements)
+
+
+State 45
+
+   17 forStatement: FOR VAR IN '[' stringExpression ']' '{' buildNodeStatements '}' •
+
+    $default  reduce using rule 17 (forStatement)
+
+
+State 46
+
+    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' • ISACHILDOF '=' stringExpression ';' '}' ';'
+    7                   | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' • '}' ';'
+
+    ISACHILDOF  shift, and go to state 48
+    '}'         shift, and go to state 49
+
+
+State 47
+
+   16 forStatement: FOR VAR IN '[' intExpression ':' intExpression ']' '{' buildNodeStatements • '}'
+
+    '}'  shift, and go to state 50
+
+
+State 48
+
+    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF • '=' stringExpression ';' '}' ';'
+
+    '='  shift, and go to state 51
+
+
+State 49
+
+    7 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' • ';'
+
+    ';'  shift, and go to state 52
+
+
+State 50
+
+   16 forStatement: FOR VAR IN '[' intExpression ':' intExpression ']' '{' buildNodeStatements '}' •
+
+    $default  reduce using rule 16 (forStatement)
+
+
+State 51
+
+    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' • stringExpression ';' '}' ';'
+
+    NUMBER  shift, and go to state 16
+    VAR     shift, and go to state 17
+    STRING  shift, and go to state 18
+
+    intExpression     go to state 19
+    stringExpression  go to state 53
+
+
+State 52
+
+    7 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';' •
+
+    $default  reduce using rule 7 (buildNodeStatement)
+
+
+State 53
+
+    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression • ';' '}' ';'
+   13 stringExpression: stringExpression • '+' stringExpression
+   14                 | stringExpression • '+' intExpression
+
+    ';'  shift, and go to state 54
+    '+'  shift, and go to state 25
+
+
+State 54
+
+    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' • '}' ';'
+
+    '}'  shift, and go to state 55
+
+
+State 55
+
+    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' • ';'
+
+    ';'  shift, and go to state 56
+
+
+State 56
+
+    6 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';' •
 
     $default  reduce using rule 6 (buildNodeStatement)
-
-
-state 29
-
-    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression . ';' '}' ';'
-   12 stringExpression: stringExpression . '+' stringExpression
-
-    ';'  shift, and go to state 30
-    '+'  shift, and go to state 15
-
-
-state 30
-
-    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' . '}' ';'
-
-    '}'  shift, and go to state 31
-
-
-state 31
-
-    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' . ';'
-
-    ';'  shift, and go to state 32
-
-
-state 32
-
-    5 buildNodeStatement: BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';' .
-
-    $default  reduce using rule 5 (buildNodeStatement)

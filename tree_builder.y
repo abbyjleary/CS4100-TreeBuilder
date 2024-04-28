@@ -9,6 +9,9 @@
 
 using namespace std;
 
+// global var that points to root
+treeNode* tree = NULL;
+
 int yylex();
 void yyerror(const char *);
 
@@ -19,7 +22,8 @@ void yyerror(const char *);
     stringExpression *pStr;
     intExpression *pInt;
     statement *pState;
-    compoundStatement *pCState;
+    struct treeNode* pNode;
+
 }
 
 %{
@@ -34,50 +38,44 @@ extern void yyerror(char *String);
 %type <str> VAR STRING NUMBER
 %type <pStr> stringExpression
 %type <pInt> intExpression
-%type <pState> statement buildNodeStatement
+%type <pState> statement buildNodeStatement forStatement
 /* %type <pState> statement buildNodeStatement forStatement */
-/* %type <pCState> start prog buildNodeStatements */
-%type <pCState> start prog 
+%type <pCState> start prog buildNodeStatements
 /* %type <pStrVar> strVariable */
-
 
 %%
 
-start : prog 
+start : commands 
     {
-        cout << $1 << endl;
-        return 1;
-        // map<string, int> mySymTable;
-        // $$ = $1;
-        // $1 -> evaluateStatement(mySymTable);
+        printTree(tree);
     }
     ;
 
-prog: statement prog {cout << "!!!!!";$$ = new compoundStatement($1, $2);}
-    | {$$ = NULL;}
+commands: 
+    statement commands
+    | 
     ; 
 
-statement: buildNodeStatement {$$ = $1;}
-    /* | forStatement {$$ = $1;} */
+statement: 
+    buildNodeStatement 
+    | forStatement
     ;
 
 buildNodeStatement: 
     BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' ISACHILDOF '=' stringExpression ';' '}' ';' 
         {
-            cout << "jfldsjak" << endl;
-            $$ = new buildNodeStatement($5, $9, $13);
+            addNode($5, $9, $13, tree)
         }
-    | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';'
+    | BUILDNODE '{' NAME '=' stringExpression ';' WEIGHT '=' intExpression ';' '}' ';' // is a root
         {
-            $$ = new buildNodeStatement($5, $9, NULL);
+            addNode($5, $9, NULL, tree)
         }
     ;
 
 intExpression:
     NUMBER 
         {
-            cout << "string: " << $1 << endl;
-            $$ = new intConstant(atoi($1));
+            $$ = atoi($1);
         }
     | VAR
         {
@@ -85,40 +83,55 @@ intExpression:
         }
     | intExpression '+' intExpression
         {
-            $$ = new plusIntExpression($1, $3);
+            $$ = addition($1, $3);
         }
 
 stringExpression:
     STRING
         {
-            cout << "string: " << $1 << endl;
-            $$ = new strConstant($1);
+            $$ = $1;
         }
     | VAR
         {
-            $$ = new strVariable($1);
+            $$ = $1;
         }
     | stringExpression '+' stringExpression
         {
-            $$ = new plusStrExpression($1, $3);
+            $$ = concat($1, $3);
         }
+    | stringExpression '+' intExpression
+    {
+        char intString[5];
+        sprintf(intString, "%d", $3);
+        $$ = concat($1, intString);
+    }
+    | intExpression '+' stringExpression
+    {
+        char intString[5];
+        sprintf(intString, "%d", $1);
+        $$ = concat(intString, $3);
+    }
 
-/* forStatement: FOR VAR IN '[' intExpression ':' intExpression ']' '{' buildNodeStatements '}' '}' {$$ = new intForStatement($2, $5, $7, $10)}; */
+forStatement: 
+    FOR VAR IN '[' intExpression ':' intExpression ']' '{' buildNodeStatements '}' 
+        {
+            //$$ = new intForStatement($2, $5, $7, $10)
+        };
+    | FOR VAR IN '[' stringExpression ']' '{' buildNodeStatements '}' 
+        {
+            //$$ = new stringForStatement($2, $5, $7, $10)
+        };
 
-/* buildNodeStatements: buildNodeStatement buildNodeStatements {$$ = new buildNodeStatements($1, $2);}
-    | {$$ = NULL;} */
+buildNodeStatements: buildNodeStatement buildNodeStatements {$$ = new buildNodeStatements($1, $2);}
+    | 
 
 
 
 %%
-#include "lex.yy.c"
+
 
 void yyerror(const char *msg) {
     printf("Error: %s\n", msg);
 }
 
-int main() {
-    // Code for testing the parser
-    yyparse();
-}
 
